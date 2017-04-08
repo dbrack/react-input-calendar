@@ -85,6 +85,11 @@
   opacity: .4;
 }
 
+.input-calendar .day.disabled {
+  opacity: .4;
+  cursor: default;
+}
+
 .input-calendar .month {
   width: 58px;
   height: 38px;
@@ -144,6 +149,11 @@
 
 .input-calendar .today-btn {
   cursor: pointer;
+}
+
+.input-calendar .today-btn.disabled {
+  opacity: .4;
+  cursor: default;
 }
 
 .input-calendar .cell.day.today {

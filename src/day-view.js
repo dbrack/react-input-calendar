@@ -6,13 +6,16 @@ import 'moment-range'
 import Cell from './cell'
 import ViewHeader from './view-header'
 
+
+
 export default class DayView extends React.Component {
   static propTypes = {
     date: React.PropTypes.object.isRequired,
     minDate: React.PropTypes.any,
     maxDate: React.PropTypes.any,
     setDate: React.PropTypes.func,
-    nextView: React.PropTypes.func
+    nextView: React.PropTypes.func,
+    isValidDate: React.PropTypes.func
   }
 
   cellClick = e => {
@@ -51,7 +54,7 @@ export default class DayView extends React.Component {
           label: day.format('D'),
           prev: (day.month() < month && !(day.year() > year)) || day.year() < year ,
           next: day.month() > month || day.year() > year,
-          disabled: day.isBefore(minDate, 'day') || day.isAfter(maxDate, 'day'),
+          disabled: day.isBefore(minDate, 'day') || day.isAfter(maxDate, 'day') || !this.props.isValidDate(day),
           curr: day.date() === currDay && day.month() === month,
           today: day.date() === today.date() && day.month() === today.month() && day.year() === today.year()
         })
@@ -98,7 +101,7 @@ export default class DayView extends React.Component {
         current: item.curr,
         today: item.today
       })
-      return <Cell classes={_class} key={i} value={item.label} />
+      return <Cell classes={_class} key={i} value={item.label} onCellClick={item.disabled ? undefined : this.cellClick} />
     })
 
     let currentDate = this.props.date ? this.props.date.format('MMMM') : moment().format('MMMM')
@@ -111,7 +114,7 @@ export default class DayView extends React.Component {
           prev={this.prev}
           titleAction={this.props.nextView} />
         <div className="days-title">{titles}</div>
-        <div className="days" onClick={this.cellClick}>{days}</div>
+        <div className="days">{days}</div>
       </div>
     )
   }

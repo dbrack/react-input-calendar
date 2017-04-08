@@ -20,6 +20,7 @@ class Calendar extends React.Component {
     const computableFormat = props.computableFormat || 'MM-DD-YYYY'
     const strictDateParsing = props.strictDateParsing || false
     const parsingFormat = props.parsingFormat || format
+    const isValidDate = props.isValidDate || Util.alwaysValidDate
 
     this.state = {
       date,
@@ -33,7 +34,8 @@ class Calendar extends React.Component {
       currentView: minView || 0,
       isVisible: false,
       strictDateParsing,
-      parsingFormat
+      parsingFormat,
+      isValidDate
     }
   }
 
@@ -67,6 +69,7 @@ class Calendar extends React.Component {
   checkIfDateDisabled(date) {
     return date && this.state.minDate && date.isBefore(this.state.minDate, 'day')
       || date && this.state.maxDate && date.isAfter(this.state.maxDate, 'day')
+      || date && !this.state.isValidDate(date)
   }
 
   documentClick = e => {
@@ -102,7 +105,7 @@ class Calendar extends React.Component {
 
     this.setState({
       date: newDate,
-      inputValue: newDate ? newDate.format(format) : null
+      inputValue: newDate && this.state.isValidDate(newDate) ? newDate.format(format) : null
     })
 
     if (this.props.onChange) {
@@ -226,6 +229,7 @@ class Calendar extends React.Component {
           maxDate={this.state.maxDate}
           minDate={this.state.minDate}
           setDate={this.setDate}
+          isValidDate={this.state.isValidDate}
         />)
         break
       case 1:
@@ -254,6 +258,7 @@ class Calendar extends React.Component {
           maxDate={this.state.maxDate}
           minDate={this.state.minDate}
           setDate={this.setDate}
+          isValidDate={this.state.isValidDate}
         />)
     }
 
@@ -360,7 +365,8 @@ Calendar.propTypes = {
   hideIcon: React.PropTypes.bool,
   customIcon: React.PropTypes.string,
   todayText: React.PropTypes.string,
-  disabled: React.PropTypes.bool
+  disabled: React.PropTypes.bool,
+  isValidDate: React.PropTypes.func,
 }
 
 export default Calendar

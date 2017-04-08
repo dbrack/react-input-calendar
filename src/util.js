@@ -66,5 +66,8 @@ export default {
       default:
         break
     }
+  },
+  alwaysValidDate(d) {
+    return true
   }
 }
